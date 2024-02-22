@@ -90,6 +90,7 @@ label {
 
 .btn {
   padding: 12px 20px;
+  width:250px;
   background-color: #007bff;
   color: #fff;
   border: none;

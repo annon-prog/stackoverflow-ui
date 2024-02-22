@@ -23,7 +23,13 @@ const routes = [
     path: '/question',
     name: 'question',
     component: () => import('../components/QuestionComponent.vue')
-    }
+  },
+  {
+    path: '/answer',
+    name: 'answer',
+    component: () => import('../components/AnswerComponent.vue')
+  }
+  
 ]
 
 export default routes

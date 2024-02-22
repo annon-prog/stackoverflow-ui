@@ -1,77 +1,97 @@
-       <!-- eslint-disable-next-line vue/no-unused-components -->
 <template>
   <div class="app-container">
- <nav class="navbar">
-  <div class="container">
-    <div class="navbar-brand">Dashboard</div>
-    <form class="search-form">
-      <input class="search-input" type="search" placeholder="Search" aria-label="Search">
-      <button class="search-button" type="submit">Search</button>
-    </form>
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a href="#" class="nav-link" @click="goToSignUp">Sign Up</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link" @click="goToSignIn">Sign In</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-brand">StackOverFlow</div>
+        <form class="search-form">
+          <input class="search-input" type="search" placeholder="Search" aria-label="Search">
+          <button class="search-button" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="#" class="nav-link" @click="goToSignUp">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" @click="goToSignIn">Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
     <div class="dashboard">
-    <div class="welcome-align">
-      <h2>Welcome to the Dashboard</h2>
-     <router-link to="/question"><button class="question-btn">Ask question</button></router-link>
+      <div class="welcome-align">
+        <h2>Welcome to the Dashboard</h2>
+        <router-link to="/question"><button class="question-btn">Ask question</button></router-link>
       </div>
 
-    <router-view v-if="$route.path === '/question'"></router-view>
-
-      <div v-else class="question" v-for="question in questions" :key="question.id">
-        <h3>{{ question.title }}</h3>
+      <router-view v-if="$route.path === '/question'"></router-view>
+      <div v-else>
+      <div  class="question" v-for="question in questions" :key="question.id">
+        <router-link   to='/answer'><h3>{{ question.title }}</h3></router-link> 
         <p>{{ question.description }}</p>
         <div class="meta">
-          <span class="votes">Votes: {{ question.votes }}</span>
+          <div class="votes">
+            <button @click="count++">Upvote</button>
+            <p>{{ "likes:" + count }}</p>
+
+            <button @click="counts++">Downvote</button>
+            <p>{{ "likes:" + counts }}</p>
+          </div>
           <span class="answers">Answers: {{ question.answers }}</span>
         </div>
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import QuestionComponent from './QuestionComponent.vue';
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
-    components: {
+  components: {
     // eslint-disable-next-line vue/no-unused-components
     QuestionComponent
+  },
+  data() {
+    return {
+      questions: [],
+      count: 0,
+      counts: 0
+    };
+  },
+  created() {
+    this.fetchQuestions();
+  },
+  methods: {
+    goToSignUp() {
+      this.$router.push('/');
     },
-    data() {
-        return {
-            questions: []
-        };
+    goToSignIn() {
+      this.$router.push('/login');
     },
-    created() {
-        const storedQuestions = JSON.parse(localStorage.getItem('questions')) || [];
-        this.questions = storedQuestions;
+    addQuestion(question) {
+      this.questions.push({
+       id: uuidv4(),
+        title: question.title,
+        description: question.description,
+        tags: question.tags,
+        votes: 0,
+        answers: 0
+      });
     },
-    methods: {
-        addQuestion(question) {
-            this.questions.push({
-                id: this.questions.length + 1,
-                title: question.title,
-                description: question.description,
-                tags: question.tags,
-                votes: 0,
-                answers: 0
-            });
+    fetchQuestions() {
+      const storedQuestions = JSON.parse(localStorage.getItem('questions')) || [];
+      this.questions = storedQuestions;
     }
- }
-  
+  }
 };
 </script>
+
+<style scoped>
+/* Your styling goes here */
+</style>
 
 <style scoped>
 .app-container {
@@ -116,9 +136,10 @@ export default {
 }
 
 .navbar-brand {
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding-left: 6em;
   padding-right:3em;
+  font-weight:bold;
 }
 
 .search-form {

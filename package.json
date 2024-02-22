@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "uuid": "^9.0.1",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },

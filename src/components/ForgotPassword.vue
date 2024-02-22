@@ -1,7 +1,7 @@
 <template>
   <div class="forgot-password-container">
-    <form class="forgot-password-form">
       <h3>Forgot Password</h3>
+    <form class="forgot-password-form">
       <div class="form-group">
         <label for="email">Email address</label>
         <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
@@ -20,13 +20,30 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .forgot-password-container {
+   width:100vw;
+  height:100vh;
   text-align: center;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: center;
+  gap:20px;
 }
 
 .forgot-password-form {
-  max-width: 300px;
-  margin: 0 auto;
+   background: #f8f6f6;
+  width: 330px;
+  height:27%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0, 0, 10px, rgba(0, 0, 0, 0.2);
+  margin: 0; /* Resetting margin */
 }
 
 .form-group {
@@ -35,7 +52,7 @@ export default {
 
 label {
   display: block;
-  text-align: left;
+  text-align: center;
 }
 
 .form-control {
@@ -54,9 +71,14 @@ label {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top:20px;
 }
 
 .btn:hover {
   background-color: #0056b3;
+}
+.form-group input[type="email"]{
+  width: calc(100% - 40px);
+  padding:10px;
 }
 </style>
