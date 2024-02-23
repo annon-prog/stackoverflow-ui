@@ -16,11 +16,11 @@
       </div>
       <div class="form-group">
         <label for="confirm-password">Confirm Password</label>
-        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm password" v-model="user.confirmPassword" >
+        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm password" v-model="user.password_confirmation" >
       </div>
        <button type="submit" class="btn">Sign Up </button>
          <div class="signin-message">
-           <p >Already registered? <router-link :to="{ name: 'login' }">Sign in</router-link></p>
+           <p >Already have an account? <router-link to="/login">Sign in</router-link></p>
     </div>
      
     </form>
@@ -31,25 +31,29 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios';
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name:'RegisterPage',
   data() {
     
     return {
-      errors:[],
+      errors: [],
       user: {
         name: '',
         email: '',
         password: '',
-        confirmPassword:'',
+        password_confirmation: '',
       },
-    } 
+    };
   },
   methods: {
       validEmail(email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    signUpButtonPressed() {
+  async  signUpButtonPressed() {
       this.errors = [];
 
      if (this.user.name == "") {
@@ -68,18 +72,23 @@ export default {
       } else if (!passwordRegex.test(this.user.password)) {
         this.errors.push("Password must contain at least one symbol, one number, one lowercase character, one uppercase character, and be at least 8 characters long");
       }
-       if (this.user.confirmPassword === "") {
+    if (this.user.password_confirmation === "") {
         this.errors.push("Confirm Password is empty");
-      } else if (this.user.password !== this.user.confirmPassword) {
+      } else if (this.user.password !== this.user.password_confirmation) {
         this.errors.push("Passwords do not match");
        }
-
-      if (this.errors.length === 0) {
-        this.$router.push({ name: 'dashboard' });
+    if (this.errors.length === 0) {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/register', this.user);
+        console.log('Registration successful:', response.data);
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error("Registration error:", error);
+        }
        }
     }
   }
-};
+});
 </script>
 
 <style scoped>
@@ -102,7 +111,7 @@ export default {
   list-style-type: none; 
   margin-bottom:10px;
   font-size:17px;
-  text-align:right;
+  text-align:left;
 }
 
 .login-container {

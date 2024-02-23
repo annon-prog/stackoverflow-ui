@@ -28,10 +28,14 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios';
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'LoginPage',
   data() {
     return {
-       errors:[],
+      errors: [],
       user: {
         email: '',
         password: '',
@@ -39,32 +43,39 @@ export default {
     }
   },
   methods: {
-     validEmail(email) {
+    validEmail(email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    signUpButtonPressed() {
-      this.errors = [];
+   async signUpButtonPressed() {
+     this.errors = [];
+      
       if (this.user.email == "") {
-       this.errors.push("Email is empty")
+        this.errors.push("Email is empty")
       } else {
-          if (!this.validEmail(this.user.email)) {
+        if (!this.validEmail(this.user.email)) {
           this.errors.push("Invalid Email");
+        }
       }
-      }
-     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+      const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
       if (this.user.password === "") {
         this.errors.push("Password is empty");
       } else if (!passwordRegex.test(this.user.password)) {
         this.errors.push("Password must contain at least one symbol, one number, one lowercase character, one uppercase character, and be at least 8 characters long");
       }
-      if (this.errors.length === 0) {
-        this.$router.push({ name: 'dashboard' });
+     if (this.errors.length === 0) {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/login', this.user);
+        console.log('Login successful:', response.data);
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error("Login error:", error);
+        }
        }
     }
-    
+
   }
-}
+});
 </script>
 
 <style scoped>
